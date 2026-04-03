@@ -1,0 +1,308 @@
+// prisma/schema.prisma
+
+// This file defines the database schema using Prisma ORM.
+// It will be used to generate the database client and migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Model: Represents all users (Customers, Drivers, Admins)
+// Row Level Security (RLS) will be applied at the Supabase level.
+model User {
+  id               String       @id @default(uuid())
+  supabaseId       String       @unique @map("supabase_id") // Links to Supabase Auth user ID
+  phoneNumber      String       @unique @map("phone_number") // Crucial for Uganda's mobile-first approach
+  email            String?      @unique
+  fullName         String       @map("full_name")
+  profilePictureUrl String?      @map("profile_picture_url")
+  role             UserRole     @default(CUSTOMER) // Defines user role for role-based access control
+  isActive         Boolean      @default(true) // For soft deletion or temporary deactivation
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  // Relationships
+  customerProfile  Customer?
+  driverProfile    Driver?
+  ordersAsCustomer Order[]      @relation("CustomerOrders")
+  ordersAsDriver   Order[]      @relation("DriverOrders")
+  wallet           Wallet?
+  referralsMade    Referral[]   @relation("Referrer")
+  referralsReceived Referral?    @relation("Referee")
+  ratingsGiven     Rating[]     @relation("Rater")
+  ratingsReceived  Rating[]     @relation("Ratee")
+  notifications    Notification[]
+
+  @@map("users") // Maps model name to database table name
+}
+
+enum UserRole {
+  CUSTOMER
+  DRIVER
+  DISTRICT_ADMIN
+  SUPER_ADMIN
+}
+
+// Customer Profile: Specific details for customer users
+model Customer {
+  id              String   @id @default(uuid())
+  userId          String   @unique @map("user_id") // Foreign key to User
+  user            User     @relation(fields: [userId], references: [id])
+  defaultAddress  String? // Stored for convenience, can be overridden per order
+  savedAddresses  String[] // Array of JSON strings or separate Address model
+  favoriteDrivers String[] // Array of driver IDs (optional, for future preference matching)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("customers")
+}
+
+// Driver Profile: Specific details for driver users
+model Driver {
+  id               String      @id @default(uuid())
+  userId           String      @unique @map("user_id") // Foreign key to User
+  user             User        @relation(fields: [userId], references: [id])
+  vehicleType      VehicleType // BODA, CAR, TRUCK
+  plateNumber      String      @unique @map("plate_number")
+  licensePlatePhotoUrl String?   @map("license_plate_photo_url") // Supabase Storage URL
+  licenseFrontPhotoUrl String?   @map("license_front_photo_url")
+  licenseBackPhotoUrl String?    @map("license_back_photo_url")
+  nationalIdFrontPhotoUrl String? @map("national_id_front_photo_url")
+  nationalIdBackPhotoUrl String?  @map("national_id_back_photo_url")
+  isVerified       Boolean     @default(false) // Admin approval required after onboarding
+  isOnline         Boolean     @default(false) // Driver's availability toggle
+  currentLocation  String? @map("current_location") // GeoJSON point or "LAT,LNG" string for live tracking
+  earnings         Float       @default(0.0)
+  rating           Float       @default(5.0) // Average rating from customers
+  deliveryCount    Int         @default(0) @map("delivery_count")
+  commissionRate   Float       @default(0.15) @map("commission_rate") // Default 15%, can be adjusted by admin or tier
+  subscriptionTier DriverSubscriptionTier @default(BASIC) @map("subscription_tier") // Free or Pro tier
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  // Relationships
+  acceptedOrders   Order[]     @relation("DriverOrders")
+
+  @@map("drivers")
+}
+
+enum VehicleType {
+  BODA // Motorcycle taxi
+  CAR
+  TRUCK // For bulk deliveries
+}
+
+enum DriverSubscriptionTier {
+  BASIC // Free
+  PRO   // Paid, e.g., UGX 15,000/month for priority matching
+}
+
+// Order Model: Represents a single delivery request
+model Order {
+  id             String      @id @default(uuid())
+  customerId     String      @map("customer_id")
+  customer       User        @relation("CustomerOrders", fields: [customerId], references: [id])
+  driverId       String?     @map("driver_id") // Null until a driver accepts
+  driver         User?       @relation("DriverOrders", fields: [driverId], references: [id])
+  status         OrderStatus @default(PENDING) // Current state of the order
+  pickupLocation String      @map("pickup_location") // GeoJSON point or "LAT,LNG"
+  dropoffLocation String     @map("dropoff_location") // GeoJSON point or "LAT,LNG"
+  pickupAddress  String      @map("pickup_address") // Human-readable address
+  dropoffAddress String      @map("dropoff_address") // Human-readable address
+  packageType    String      @map("package_type") // e.g., "Documents", "Food", "Electronics"
+  packageWeight  Float       @map("package_weight") // in kg
+  packagePhotoUrl String?    @map("package_photo_url") // Supabase Storage URL
+  notes          String? // Special instructions
+  preferredPickupTime DateTime? @map("preferred_pickup_time")
+  fareAmount     Float       @map("fare_amount") // Total cost charged to customer
+  commissionPaid Float       @map("commission_paid") // Amount of commission deducted from driver
+  driverPayout   Float       @map("driver_payout") // Amount driver receives after commission
+  distanceKm     Float?      @map("distance_km") // Calculated distance
+  estimatedEta   DateTime?   @map("estimated_eta") // Estimated time of arrival
+  proofOfDeliveryPhotoUrl String? @map("proof_of_delivery_photo_url") // Supabase Storage URL
+  customerRatingId String?   @unique @map("customer_rating_id") // Link to customer's rating for this order
+  customerRating Rating?    @relation("CustomerRatingForOrder", fields: [customerRatingId], references: [id])
+  driverRatingId   String?   @unique @map("driver_rating_id") // Link to driver's rating for this order
+  driverRating   Rating?    @relation("DriverRatingForOrder", fields: [driverRatingId], references: [id])
+  paymentStatus  PaymentStatus @default(PENDING)
+  paymentMethod  PaymentMethod?
+  insuranceOption Boolean    @default(false)
+  insuranceAmount Float      @default(0.0)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  acceptedAt     DateTime?   @map("accepted_at")
+  pickedUpAt     DateTime?   @map("picked_up_at")
+  deliveredAt    DateTime?   @map("delivered_at")
+  cancelledAt    DateTime?   @map("cancelled_at")
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING      // Customer placed, waiting for driver match
+  SEARCHING    // Actively looking for a driver
+  ACCEPTED     // Driver accepted the order
+  PICKED_UP    // Driver has picked up the package
+  IN_TRANSIT   // Driver is en route to drop-off
+  DELIVERED    // Package delivered successfully
+  CANCELLED    // Order cancelled by customer or admin
+  FAILED       // Delivery failed (e.g., recipient unavailable)
+  DISPUTED     // Order is under dispute resolution
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+  FAILED
+}
+
+enum PaymentMethod {
+  MOBILE_MONEY // MTN MoMo, Airtel Money
+  WALLET
+  CARD // Flutterwave
+}
+
+// Wallet Model: For in-app credit and mobile money top-ups
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  balance   Float    @default(0.0) // Current balance in UGX
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions Transaction[]
+
+  @@map("wallets")
+}
+
+// Transaction Model: Records all financial movements
+model Transaction {
+  id           String        @id @default(uuid())
+  walletId     String        @map("wallet_id")
+  wallet       Wallet        @relation(fields: [walletId], references: [id])
+  amount       Float         // Amount of transaction (positive for top-up, negative for payment)
+  type         TransactionType // TOPUP, PAYMENT, WITHDRAWAL, COMMISSION
+  status       TransactionStatus @default(PENDING)
+  reference    String? // External transaction ID from payment gateway
+  description  String? // e.g., "MTN MoMo Top-up", "Payment for Order #XYZ"
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("transactions")
+}
+
+enum TransactionType {
+  TOPUP      // Adding money to wallet
+  PAYMENT    // Paying for an order from wallet
+  WITHDRAWAL // Driver withdrawing earnings
+  COMMISSION // Commission deducted from driver
+  BONUS      // Referral bonus, promotional credit
+  REFUND     // Money returned to customer
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+// Referral Model: For the referral program
+model Referral {
+  id             String   @id @default(uuid())
+  referrerId     String   @map("referrer_id") // User who referred
+  referrer       User     @relation("Referrer", fields: [referrerId], references: [id])
+  refereeId      String   @unique @map("referee_id") // User who was referred
+  referee        User     @relation("Referee", fields: [refereeId], references: [id])
+  bonusAmount    Float    @default(0.0) @map("bonus_amount")
+  status         ReferralStatus @default(PENDING) // PENDING, AWARDED, EXPIRED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("referrals")
+}
+
+enum ReferralStatus {
+  PENDING    // Referee registered but not completed first order
+  AWARDED    // Bonus credited
+  EXPIRED    // Referral period passed
+}
+
+// Rating Model: For customer and driver ratings
+model Rating {
+  id           String    @id @default(uuid())
+  raterId      String    @map("rater_id") // User giving the rating
+  rater        User      @relation("Rater", fields: [raterId], references: [id])
+  rateeId      String    @map("ratee_id") // User being rated
+  ratee        User      @relation("Ratee", fields: [rateeId], references: [id])
+  orderId      String    @unique @map("order_id") // The order associated with this rating
+  score        Int       // 1 to 5 stars
+  comment      String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // Relationships
+  orderAsCustomerRating Order? @relation("CustomerRatingForOrder")
+  orderAsDriverRating   Order? @relation("DriverRatingForOrder")
+
+  @@map("ratings")
+}
+
+// Notification Model: For in-app notifications
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  isRead    Boolean  @default(false) @map("is_read")
+  type      NotificationType // e.g., ORDER_STATUS, PROMOTION, ALERT
+  link      String? // Deep link within the app
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  ORDER_STATUS
+  PROMOTION
+  ALERT
+  PAYMENT
+  REFERRAL
+}
+
+// Geo-fencing or Pricing Zones (simplified for MVP)
+model PricingZone {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  // GeoJSON polygon for the zone (e.g., "Mubende Town")
+  // For MVP, could be simple name-based, or implement complex GIS later
+  boundaryGeoJson String @map("boundary_geojson") // Store as string for PostGIS integration later
+  basePricePerKm Float  @map("base_price_per_km")
+  surgeMultiplier Float @map("surge_multiplier") @default(1.0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("pricing_zones")
+}
+
+// Admin settings for system-wide configurations (e.g., referral bonuses, default commission)
+model AppSetting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       String // Store as JSON string if complex, or simple string
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("app_settings")
+}
