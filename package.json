@@ -41,7 +41,10 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.6"
+    "tailwindcss-animate": "^1.0.6",
+    "three": "^r128",
+    "@types/three": "^r128",
+    "lucide-react": "^0.294.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
