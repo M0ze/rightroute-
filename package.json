@@ -45,7 +45,7 @@
     "tailwindcss-animate": "^1.0.6",
     "three": "^0.160.0",
     "@types/three": "^0.160.0",
-    "lucide-react": "^0.294.0"
+    "lucide-react": "^0.473.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
