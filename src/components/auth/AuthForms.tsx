@@ -158,7 +158,7 @@ export function RegisterForm() {
       // We then redirect the user to an OTP verification page.
       // The user will then complete verification on the OTP screen.
       toast.success('Registration successful! Please check your phone for an OTP to verify your account.');
-      router.push(`/auth/otp?phone=${values.phoneNumber}`); // Redirect to OTP verification
+      router.push(`/otp?phone=${values.phoneNumber}`); // Redirect to OTP verification
     } catch (error: any) {
       toast.error(error.message || 'Registration failed. Please try again.');
       console.error('Registration error:', error);

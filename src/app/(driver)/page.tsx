@@ -48,7 +48,7 @@ export default function DriverDashboard() {
   // Fetch driver stats and available jobs
   useEffect(() => {
     if (!user) {
-      router.push('/auth/login');
+      router.push('/login');
       return;
     }
 
@@ -133,7 +133,7 @@ export default function DriverDashboard() {
   }
 
   if (!user) {
-    router.push('/auth/login');
+    router.push('/login');
     return null;
   }
 

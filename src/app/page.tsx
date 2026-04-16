@@ -21,12 +21,12 @@ export default function LandingPage() {
             RightRoute
           </div>
           <div className="flex gap-4">
-            <Link href="/auth/login">
+            <Link href="/login">
               <Button variant="ghost" className="text-white hover:text-blue-400">
                 Login
               </Button>
             </Link>
-            <Link href="/auth/register">
+            <Link href="/register">
               <Button className="bg-blue-600 hover:bg-blue-700">
                 Get Started
               </Button>
@@ -55,13 +55,13 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/auth/register">
+              <Link href="/register">
                 <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 group">
                   Start Delivering
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link href="/auth/login">
+              <Link href="/login">
                 <Button size="lg" variant="outline" className="text-lg px-8 border-slate-600 text-white hover:bg-slate-800">
                   Sign In
                 </Button>
@@ -161,12 +161,12 @@ export default function LandingPage() {
           <h2 className="text-4xl font-bold">Ready to Get Started?</h2>
           <p className="text-xl text-slate-300">Join thousands of satisfied customers and drivers using RightRoute.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/auth/register">
+            <Link href="/register">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8">
                 Register Now
               </Button>
             </Link>
-            <Link href="/auth/login">
+            <Link href="/login">
               <Button size="lg" variant="outline" className="text-lg px-8 border-slate-600 text-white hover:bg-slate-800">
                 Already Have an Account?
               </Button>

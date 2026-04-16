@@ -6,7 +6,7 @@ import { AuthProvider } from '@/context/AuthProvider';
 import { ThemeProvider } from '@/context/ThemeProvider'; // For dark/light mode
 import { Toaster } from 'sonner'; // For toasts/notifications
 import { LanguageProvider } from '@/context/LanguageProvider'; // For i18n
-import { TRPCReactProvider } from '@/trpc/react'; // Placeholder for tRPC if we add it later
+// import { TRPCReactProvider } from '@/trpc/react'; // Placeholder for tRPC if we add it later
 
 const inter = Inter({ subsets: ['latin'] });
 

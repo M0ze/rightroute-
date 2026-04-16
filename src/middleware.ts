@@ -19,10 +19,10 @@ export async function middleware(request: NextRequest) {
   // These routes are accessible to everyone (logged in or logged out).
   const publicRoutes = [
     '/', // Landing page
-    '/auth/login',
-    '/auth/register',
-    '/auth/otp',
-    '/auth/callback', // Supabase callback URL
+    '/login',
+    '/register',
+    '/otp',
+    '/api/auth/callback', // Supabase callback URL
     // Add other public pages like privacy policy, terms of service etc.
   ];
 
@@ -34,7 +34,7 @@ export async function middleware(request: NextRequest) {
   // --- Authentication Check ---
   // If no session (user is not logged in) and trying to access a protected route, redirect to login.
   if (!session) {
-    return NextResponse.redirect(new URL('/auth/login', request.url));
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
   // --- Authorization (Role-Based Access Control) ---
@@ -52,8 +52,8 @@ export async function middleware(request: NextRequest) {
     // or if there's an error fetching the role, redirect to a page to complete profile or to login.
     console.error('Middleware: Error fetching user role or user not found in DB:', error?.message);
     // Potentially redirect to an OTP verification page if they've registered but not completed it
-    if (pathname !== '/auth/otp' && pathname !== '/auth/register' && pathname !== '/auth/login') {
-      return NextResponse.redirect(new URL('/auth/login', request.url)); // Fallback to login
+    if (pathname !== '/otp' && pathname !== '/register' && pathname !== '/login') {
+      return NextResponse.redirect(new URL('/login', request.url)); // Fallback to login
     }
   }
 
@@ -92,22 +92,22 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/admin', request.url));
       default:
         // If role is unassigned or unknown, redirect to a default safe page or login
-        return NextResponse.redirect(new URL('/auth/login', request.url));
+        return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
   // Enforce access for specific roles based on the path.
   if (pathname.startsWith('/customer')) {
     if (userRole !== UserRole.CUSTOMER) {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   } else if (pathname.startsWith('/driver')) {
     if (userRole !== UserRole.DRIVER) {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   } else if (pathname.startsWith('/admin')) {
     if (userRole !== UserRole.SUPER_ADMIN && userRole !== UserRole.DISTRICT_ADMIN) {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
+      return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 

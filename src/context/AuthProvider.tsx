@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Session, User as SupabaseAuthUser } from '@supabase/supabase-js';
 import { createSupabaseBrowserClient } from '@/lib/supabase/client';
 import { UserRole } from '@prisma/client'; // Import UserRole from Prisma client
+import { toast } from 'sonner';
 
 // Define the shape of our authentication context
 interface AuthContextType {
@@ -107,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(null);
       setUserRole(null); // Clear role on logout
       toast.success('Logged out successfully!');
-      router.push('/auth/login'); // Redirect to login page after logout
+      router.push('/login'); // Redirect to login page after logout
     }
     setIsLoading(false);
   };

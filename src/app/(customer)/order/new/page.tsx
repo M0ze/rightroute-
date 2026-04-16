@@ -109,7 +109,7 @@ export default function NewOrderPage() {
   const onSubmit = async (values: OrderFormValues) => {
     if (!user) {
       toast.error('You must be logged in to place an order.');
-      router.push('/auth/login');
+      router.push('/login');
       return;
     }
 
@@ -142,7 +142,7 @@ export default function NewOrderPage() {
   }
 
   if (!user) {
-    router.push('/auth/login');
+    router.push('/login');
     return null;
   }
 

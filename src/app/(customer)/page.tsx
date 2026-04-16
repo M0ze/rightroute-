@@ -34,7 +34,7 @@ export default function CustomerDashboard() {
   // Fetch customer's orders on component mount
   useEffect(() => {
     if (!user) {
-      router.push('/auth/login');
+      router.push('/login');
       return;
     }
 

@@ -33,8 +33,8 @@
     "i18next-browser-languagedetector": "^7.2.0",
     "i18next-http-backend": "^2.4.2",
     "leaflet": "^1.9.4",
-    "react-leaflet": "^4.2.3",
-    "@mapbox/mapbox-gl": "^2.15.0",
+    "react-leaflet": "^5.0.0",
+    "mapbox-gl": "^2.15.0",
     "axios": "^1.6.2",
     "zustand": "^4.4.1",
     "@tanstack/react-query": "^5.25.0",
@@ -42,8 +42,8 @@
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.6",
-    "three": "^r128",
-    "@types/three": "^r128",
+    "three": "^0.160.0",
+    "@types/three": "^0.160.0",
     "lucide-react": "^0.294.0"
   },
   "devDependencies": {
