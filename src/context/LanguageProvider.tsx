@@ -7,7 +7,7 @@ import { initReactI18next, useTranslation } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import Backend from 'i18next-http-backend';
 
-// Available languages in RightRoute
+// Available languages in Genda
 export type Language = 'en' | 'lg' | 'sw'; // English, Luganda, Swahili
 
 // i18n initialization

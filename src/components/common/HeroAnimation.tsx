@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
 // Beautiful Three.js animation showing rotating delivery vehicles and network nodes
-// Creates a modern, animated hero scene that captures RightRoute's essence
+// Creates a modern, animated hero scene that captures Genda's essence
 // Optimized for performance on lower-end devices common in Uganda
 
 export default function HeroAnimation() {
@@ -49,7 +49,7 @@ export default function HeroAnimation() {
     pointLight2.position.set(-5, 3, 3);
     scene.add(pointLight2);
 
-    // Create central rotating cube (represents the RightRoute hub)
+    // Create central rotating cube (represents the Genda hub)
     const cubeGeometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
     const cubeMaterial = new THREE.MeshPhongMaterial({
       color: 0x3b82f6,

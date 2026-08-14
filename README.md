@@ -1,8 +1,8 @@
-# RightRoute - Transport & Delivery SaaS for Mubende District, Uganda
+# Genda - Transport & Delivery SaaS for Mubende District, Uganda
 
 ## Overview
 
-RightRoute is a hyper-local, production-ready Transport and Delivery SaaS platform designed specifically for Mubende District, Uganda. It connects customers needing reliable delivery with drivers offering transport services. The platform is built with a mobile-first, offline-resilient architecture optimized for 3G/4G networks common in rural Uganda.
+Genda is a hyper-local, production-ready Transport and Delivery SaaS platform designed specifically for Mubende District, Uganda. It connects customers needing reliable delivery with drivers offering transport services. The platform is built with a mobile-first, offline-resilient architecture optimized for 3G/4G networks common in rural Uganda.
 
 ### Vision
 Start as an MVP in Mubende District with 500 daily orders within 6 months, scale to 10,000 orders/day nationally across Uganda and East Africa, targeting $2M+ ARR within 24 months.
@@ -23,7 +23,7 @@ Start as an MVP in Mubende District with 500 daily orders within 6 months, scale
 ## Project Structure
 
 ```
-rightroute/
+genda/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── (auth)/             # Authentication routes
@@ -98,8 +98,8 @@ rightroute/
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/rightroute.git
-   cd rightroute
+   git clone https://github.com/yourusername/genda.git
+   cd genda
    ```
 
 2. **Install dependencies:**

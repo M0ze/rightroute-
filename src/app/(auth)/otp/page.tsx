@@ -1,7 +1,7 @@
 // src/app/(auth)/otp/page.tsx
 import { OTPScreen } from '@/components/auth/OTPScreen';
 
-// OTP verification page for RightRoute.
+// OTP verification page for Genda.
 // Users are redirected here after phone number registration to verify their account.
 // This is a critical step for phone-based authentication in Uganda.
 export default function OtpVerificationPage() {

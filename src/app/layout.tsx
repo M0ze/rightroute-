@@ -11,7 +11,7 @@ import { LanguageProvider } from '@/context/LanguageProvider'; // For i18n
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'RightRoute - Transport & Delivery in Uganda',
+  title: 'Genda - Transport & Delivery in Uganda',
   description: 'Your reliable partner for logistics and delivery in Mubende District and beyond.',
   manifest: '/manifest.json', // PWA manifest
   themeColor: '#ffffff', // For PWA

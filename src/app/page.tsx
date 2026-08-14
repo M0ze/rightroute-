@@ -9,7 +9,7 @@ import { ArrowRight, Zap, MapPin, TrendingUp, Users, Shield } from 'lucide-react
 
 // Landing page with Three.js hero animation and feature showcase
 // Modern, beautiful design optimized for mobile and desktop
-// Sells the vision of RightRoute to potential customers and drivers
+// Sells the vision of Genda to potential customers and drivers
 
 export default function LandingPage() {
   return (
@@ -18,7 +18,7 @@ export default function LandingPage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/50 backdrop-blur-md border-b border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            RightRoute
+            Genda
           </div>
           <div className="flex gap-4">
             <Link href="/login">
@@ -50,7 +50,7 @@ export default function LandingPage() {
               </h1>
               <p className="text-xl text-slate-300 leading-relaxed">
                 Connect with reliable drivers for fast, affordable delivery across Mubende District and Uganda. 
-                Whether you're a customer or a driver, RightRoute makes logistics effortless.
+                Whether you're a customer or a driver, Genda makes logistics effortless.
               </p>
             </div>
 
@@ -95,7 +95,7 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-900/50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-16">Why Choose RightRoute?</h2>
+          <h2 className="text-4xl font-bold text-center mb-16">Why Choose Genda?</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Feature 1 */}
@@ -159,7 +159,7 @@ export default function LandingPage() {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-8 bg-gradient-to-r from-blue-600/10 to-cyan-600/10 rounded-2xl border border-blue-600/30 p-12">
           <h2 className="text-4xl font-bold">Ready to Get Started?</h2>
-          <p className="text-xl text-slate-300">Join thousands of satisfied customers and drivers using RightRoute.</p>
+          <p className="text-xl text-slate-300">Join thousands of satisfied customers and drivers using Genda.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/register">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8">
@@ -177,7 +177,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-8 px-4 sm:px-6 lg:px-8 text-center text-slate-400">
-        <p>&copy; 2026 RightRoute. All rights reserved. Built with ❤️ for Mubende District, Uganda.</p>
+        <p>&copy; 2026 Genda. All rights reserved. Built with ❤️ for Mubende District, Uganda.</p>
       </footer>
 
       {/* Animations */}

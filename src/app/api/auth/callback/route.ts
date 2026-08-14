@@ -34,6 +34,6 @@ export async function GET(request: Request) {
   }
 
   // return the user to an error page with instructions
-  // For RightRoute, we redirect to login with an error message
+  // For Genda, we redirect to login with an error message
   return NextResponse.redirect(`${origin}/login?error=auth-code-error`)
 }
